@@ -153,6 +153,8 @@ class SinglyLinkedList {
   }
 }
 
+export default SinglyLinkedList;
+
 test("Push, pop and length", () => {
   const list = new SinglyLinkedList();
   expect(list.length).toBe(0);
