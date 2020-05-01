@@ -28,6 +28,62 @@ class Graph {
   removeVertex(name) {
     delete this.vertices[name];
   }
+
+  dfs(start) {
+    const result = [];
+    const visited = {};
+    const traverse = (v) => {
+      result.push(v);
+      visited[v] = true;
+      for (const e of this.vertices[v]) {
+        if (visited[e]) {
+          continue;
+        } else {
+          traverse(e);
+        }
+      }
+      return;
+    };
+    traverse(start);
+    return result;
+  }
+
+  dfs_iterative(start) {
+    const result = [];
+    const pushed = {};
+    const stack = [];
+    stack.push(start);
+    pushed[start] = true;
+    while (stack.length > 0) {
+      const v = stack.pop();
+      result.push(v);
+      for (const e of this.vertices[v]) {
+        if (!pushed[e]) {
+          stack.push(e);
+          pushed[e] = true;
+        }
+      }
+    }
+    return result;
+  }
+
+  bfs_iterative(start) {
+    const result = [];
+    const queue = [start];
+    const pushed = {};
+    pushed[start] = true;
+    while (queue.length > 0) {
+      const v = queue.shift();
+      result.push(v);
+      for (const e of this.vertices[v]) {
+        if (!pushed[e]) {
+          queue.push(e);
+          pushed[e] = true;
+        }
+      }
+    }
+    return result;
+  }
 }
 
 test("Graph", () => {
@@ -47,4 +103,24 @@ test("Graph", () => {
   expect(g.areConnected("CPT", "JHB")).toBe(false);
   g.removeVertex("JHB");
   expect(g.hasVertex("JHB")).toBe(false);
+});
+
+test("Graph traversal", () => {
+  const g = new Graph();
+  g.addVertex("A");
+  g.addVertex("B");
+  g.addVertex("C");
+  g.addVertex("D");
+  g.addVertex("E");
+  g.addVertex("F");
+  g.addEdge("A", "B");
+  g.addEdge("A", "C");
+  g.addEdge("B", "D");
+  g.addEdge("D", "E");
+  g.addEdge("D", "F");
+  g.addEdge("F", "E");
+  g.addEdge("E", "C");
+  expect(g.dfs("A")).toEqual(["A", "B", "D", "E", "F", "C"]);
+  expect(g.dfs_iterative("A")).toEqual(["A", "C", "E", "F", "D", "B"]);
+  expect(g.bfs_iterative("A")).toEqual(["A", "B", "C", "D", "E", "F"]);
 });
