@@ -76,7 +76,7 @@ class WeightedGraph {
         }
       }
     }
-    console.log(data);
+
     const result = [];
     let v = to;
     while (data[v]) {
